@@ -13,7 +13,7 @@
   <div class="flex flex-col items-center w-full p-3">
 
     <!-- Top bar with day tabs and save button -->
-    <div class="w-full max-w-[1600px] flex flex-wrap justify-between gap-2 p-1 pb-1 pr-2 items-center">
+    <div class="w-full max-w-[1600px] flex flex-wrap justify-end md:justify-between gap-2 p-1 pb-1 pr-2 items-center">
 
       <div class="col-span-5 flex flex-wrap gap-2">
         <button class="day-tab px-3 py-1 rounded-md text-sm font-medium transition" data-day="monday">Monday</button>
@@ -37,16 +37,18 @@
         <input type="file" id="importInput" accept=".json" class="hidden" />
         <button id="saveAllBtn"
           class="px-3 py-1 bg-green-500 text-white text-sm font-semibold rounded-lg hover:bg-green-600 transition">
-          Save All
+          Save
         </button>
       </div>
 
     </div>
 
+
+
     <!-- Planner grid -->
     <div id="planner"
      class="w-full max-w-[1600px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 p-2 relative">
-</div>
+    </div>
   
   </div>
 
