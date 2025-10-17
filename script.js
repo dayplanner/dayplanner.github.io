@@ -147,7 +147,7 @@ function saveTasks(silent = false) {
 
   if (!silent) {
     saveAllBtn.textContent = 'All Saved ✓';
-    setTimeout(() => (saveAllBtn.textContent = 'Save All'), 1500);
+    setTimeout(() => (saveAllBtn.textContent = 'Save'), 1500);
   }
 }
 
