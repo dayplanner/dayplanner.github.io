@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day Planner - Weekly</title>
+  <link rel='shortcut icon' href='favicon.png' type='image/x-icon' />
+  <script src="tailwindcss.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-orange-400 via-pink-400 to-rose-300 min-h-screen">
+
+
+  <div class="flex flex-col items-center w-full p-3">
+
+    <!-- Top bar with day tabs and save button -->
+    <div class="w-full max-w-[1600px] flex flex-wrap justify-between gap-2 p-1 pb-1 pr-2 items-center">
+
+      <div class="col-span-5 flex flex-wrap gap-2">
+        <button class="day-tab px-3 py-1 rounded-md text-sm font-medium transition" data-day="monday">Monday</button>
+        <button class="day-tab px-3 py-1 rounded-md text-sm font-medium transition" data-day="tuesday">Tuesday</button>
+        <button class="day-tab px-3 py-1 rounded-md text-sm font-medium transition" data-day="wednesday">Wednesday</button>
+        <button class="day-tab px-3 py-1 rounded-md text-sm font-medium transition" data-day="thursday">Thursday</button>
+        <button class="day-tab px-3 py-1 rounded-md text-sm font-medium transition" data-day="friday">Friday</button>
+        <button class="day-tab px-3 py-1 rounded-md text-sm font-medium transition" data-day="saturday">Saturday</button>
+        <button class="day-tab px-3 py-1 rounded-md text-sm font-medium transition" data-day="sunday">Sunday</button>
+      </div>
+      
+      <div class="flex flex-wrap justify-end gap-2">
+        <button id="exportBtn"
+          class="px-3 py-1 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-blue-600 transition">
+          Export
+        </button>
+        <label for="importInput"
+          class="px-3 py-1 bg-purple-500 text-white text-sm font-semibold rounded-lg hover:bg-purple-600 transition cursor-pointer">
+          Import
+        </label>
+        <input type="file" id="importInput" accept=".json" class="hidden" />
+        <button id="saveAllBtn"
+          class="px-3 py-1 bg-green-500 text-white text-sm font-semibold rounded-lg hover:bg-green-600 transition">
+          Save All
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Planner grid -->
+    <div id="planner"
+     class="w-full max-w-[1600px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 p-2 relative">
+</div>
+  
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
