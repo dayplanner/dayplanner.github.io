@@ -2,7 +2,8 @@ const planner = document.getElementById('planner');
 const saveAllBtn = document.getElementById('saveAllBtn');
 const dayTabs = document.querySelectorAll('.day-tab');
 
-const startHour = 0;   // 00:00
+//const startHour = 0;   // 00:00
+const startHour = 8;   // 08:00
 const endHour = 23;    // 23:00
 const slotMinutes = 30; // half-hour slots
 
@@ -61,7 +62,7 @@ function renderPlanner() {
 
       const input = document.createElement('textarea');
       input.className =
-        'flex-1 p-1 pt-0 pl-1.5 resize-none text-lg focus:outline-none focus:ring-2 transition ' +
+        'flex-1 p-1 pt-0 pl-1.5 resize-none text-3xl focus:outline-none focus:ring-2 transition ' +
         (status === 'past'
           ? 'bg-gray-200 border-red-200 border italic text-gray-600'
           : status === 'present'
@@ -174,7 +175,7 @@ currentDay = todayName;
 // Highlight current day tab
 dayTabs.forEach((t) => {
   if (t.dataset.day === currentDay) {
-    t.classList.add('bg-indigo-400', 'text-white');
+    t.classList.add('<bg-indigo-40></bg-indigo-40>0', 'text-white');
   }
 });
 
