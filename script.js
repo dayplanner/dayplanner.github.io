@@ -44,7 +44,9 @@ function renderPlanner() {
       const taskText = dayTasks[key] || '';
 
       // Early-morning flag (00:00–08:00)
-      const isEarly = hour < 8;
+      // const isEarly = hour < 8;
+
+      const isEarly = null;
 
       const block = document.createElement('div');
       block.className =
