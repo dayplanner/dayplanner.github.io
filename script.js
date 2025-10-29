@@ -2,8 +2,8 @@ const planner = document.getElementById('planner');
 const saveAllBtn = document.getElementById('saveAllBtn');
 const dayTabs = document.querySelectorAll('.day-tab');
 
-//const startHour = 0;   // 00:00
-const startHour = 8;   // 08:00
+const startHour = 0;   // 00:00
+// const startHour = 8;   // 08:00
 const endHour = 23;    // 23:00
 const slotMinutes = 30; // half-hour slots
 
