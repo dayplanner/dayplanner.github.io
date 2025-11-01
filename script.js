@@ -9,8 +9,7 @@ const slotMinutes = 30; // half-hour slots
 
 let currentDay = 'sunday';
 
-// const STORAGE_KEY = "DayPlanner";
-const STORAGE_KEY = "weeklyPlannerTasks";
+const STORAGE_KEY = "DayPlanner";
 
 // Load all tasks (object with day keys)
 const weeklyTasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
