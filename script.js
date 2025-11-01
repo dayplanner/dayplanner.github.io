@@ -1,9 +1,7 @@
 const planner = document.getElementById('planner');
-const saveAllBtn = document.getElementById('saveAllBtn');
 const dayTabs = document.querySelectorAll('.day-tab');
 
 const startHour = 0;   // 00:00
-// const startHour = 8;   // 08:00
 const endHour = 23;    // 23:00
 const slotMinutes = 30; // half-hour slots
 
@@ -45,9 +43,6 @@ function renderPlanner() {
       const status = getTimeStatus(hour, minute);
       const taskText = dayTasks[key] || '';
 
-      // Early-morning flag (00:00–08:00)
-      // const isEarly = hour < 8;
-
       const isEarly = null;
 
       const block = document.createElement('div');
@@ -55,14 +50,22 @@ function renderPlanner() {
         'flex flex-col p-0 transition ' +
         (isEarly ? 'opacity-70 bg-gray-50 ' : 'bg-white ');
 
-      const label = document.createElement('div');
-      label.className =
-        'text-lg font-semibold pl-1 m-1 ' +
-        (isEarly
-          ? 'bg-gray-600 text-gray-100'
-          : 'bg-[#444] text-white');
+      // --- Label row container ---
+      const labelRow = document.createElement('div');
+      labelRow.className = 'border border-white flex justify-between items-center bg-[#444] text-white p-1 px-2 rounded-t';
 
+      const label = document.createElement('div');
+      label.className = 'text-lg font-semibold';
       label.textContent = formatTime(hour, minute);
+
+      // --- Save button (hidden by default) ---
+      const saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save';
+      saveBtn.className =
+        'hidden text-sm bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded transition';
+      saveBtn.addEventListener('click', () => saveSingleTask(key));
+
+      labelRow.append(label, saveBtn);
 
       const input = document.createElement('textarea');
       input.className =
@@ -73,18 +76,67 @@ function renderPlanner() {
           ? 'bg-green-100'
           : 'bg-white');
 
-      // Optional: soften text color for early slots
       if (isEarly) input.classList.add('text-gray-500');
 
       input.rows = 3;
       input.value = taskText;
       input.dataset.key = key;
 
-      block.append(label, input);
+      // --- Show/hide save button depending on content ---
+      input.addEventListener('input', () => {
+        const hasContent = input.value.trim().length > 0;
+        if (hasContent) {
+          saveBtn.classList.remove('hidden');
+        } else {
+          saveBtn.classList.add('hidden');
+        }
+      });
+
+      // --- Accessibility / Tab order improvement ---
+      input.tabIndex = 1; // default sequence
+      saveBtn.tabIndex = 0; // focus before textarea when visible
+
+      // When user presses Tab, move focus to Save button first if content exists
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && !e.shiftKey) {
+          const hasContent = input.value.trim().length > 0;
+          if (hasContent) {
+            e.preventDefault();
+            saveBtn.focus();
+          }
+        }
+      });
+
+
+
+      block.append(labelRow, input);
       planner.appendChild(block);
     }
   }
 }
+function saveSingleTask(key) {
+  const textarea = planner.querySelector(`textarea[data-key="${key}"]`);
+  if (!textarea) return;
+
+  const dayTasks = weeklyTasks[currentDay] || {};
+  dayTasks[key] = textarea.value.trim();
+  weeklyTasks[currentDay] = dayTasks;
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(weeklyTasks));
+
+  // Give feedback
+  const saveBtn = textarea.previousElementSibling.querySelector('button');
+  if (saveBtn) {
+    saveBtn.textContent = 'Saved ✓';
+    saveBtn.disabled = true;
+    setTimeout(() => {
+      saveBtn.textContent = 'Save';
+      saveBtn.disabled = false;
+      saveBtn.classList.add('hidden');
+    }, 1500);
+  }
+}
+
 
 
 // --- Export Tasks ---
@@ -139,24 +191,45 @@ importInput.addEventListener('change', (e) => {
 });
 
 
-// --- Save All ---
-function saveTasks(silent = false) {
-  const textareas = planner.querySelectorAll('textarea');
-  const dayTasks = {};
-  textareas.forEach((ta) => {
-    const key = ta.dataset.key;
-    dayTasks[key] = ta.value.trim();
-  });
-  weeklyTasks[currentDay] = dayTasks;
+// --- Clear All ---
+const clearAllBtn = document.getElementById('clearAllBtn');
+clearAllBtn.addEventListener('click', () => {
+  const confirmClear = confirm(
+    "Are you sure you want to delete ALL tasks from every day and time slot?\n\nThis action cannot be undone."
+  );
+
+  if (!confirmClear) return;
+
+  // Clear everything
+  localStorage.removeItem(STORAGE_KEY);
+  for (const key in weeklyTasks) delete weeklyTasks[key];
+
+  renderPlanner();
+
+  clearAllBtn.textContent = 'All Cleared ✓';
+  setTimeout(() => (clearAllBtn.textContent = 'Clear All'), 1500);
+});
+
+
+// --- Clear Current Day ---
+const clearDayBtn = document.getElementById('clearDayBtn');
+clearDayBtn.addEventListener('click', () => {
+  const confirmClearDay = confirm(
+    `Are you sure you want to delete all tasks for ${currentDay.charAt(0).toUpperCase() + currentDay.slice(1)}?\n\nThis cannot be undone.`
+  );
+
+  if (!confirmClearDay) return;
+
+  // Remove only this day's data
+  delete weeklyTasks[currentDay];
   localStorage.setItem(STORAGE_KEY, JSON.stringify(weeklyTasks));
 
-  if (!silent) {
-    saveAllBtn.textContent = 'All Saved ✓';
-    setTimeout(() => (saveAllBtn.textContent = 'Save'), 1500);
-  }
-}
+  renderPlanner();
 
-saveAllBtn.addEventListener('click', () => saveTasks());
+  clearDayBtn.textContent = `${currentDay.charAt(0).toUpperCase() + currentDay.slice(1)} Cleared ✓`;
+  setTimeout(() => (clearDayBtn.textContent = 'Clear Day'), 1500);
+});
+
 
 // --- Switch Days ---
 dayTabs.forEach((tab) => {
@@ -184,9 +257,6 @@ dayTabs.forEach((t) => {
 });
 
 renderPlanner();
-
-// --- Auto Save every 1 minutes ---
-setInterval(() => saveTasks(true), 1 * 60 * 1000);
 
 // Optional: refresh color states every 5 min
 setInterval(renderPlanner, 5 * 60 * 1000);
