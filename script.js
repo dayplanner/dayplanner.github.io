@@ -10,7 +10,7 @@ const slotMinutes = 30; // half-hour slots
 let currentDay = 'sunday';
 
 // Load all tasks (object with day keys)
-const weeklyTasks = JSON.parse(localStorage.getItem('weeklyPlannerTasks')) || {};
+const weeklyTasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
 // --- Helpers ---
 function formatTime(hour, minute) {
@@ -105,7 +105,7 @@ exportBtn.addEventListener('click', () => {
   setTimeout(() => (exportBtn.textContent = 'Export'), 1500);
 });
 
-
+const STORAGE_KEY = "DayPlanner";
 // --- Import Tasks ---
 const importInput = document.getElementById('importInput');
 importInput.addEventListener('change', (e) => {
@@ -119,7 +119,7 @@ importInput.addEventListener('change', (e) => {
 
       if (typeof importedData === 'object' && importedData !== null) {
         Object.assign(weeklyTasks, importedData);
-        localStorage.setItem('weeklyPlannerTasks', JSON.stringify(weeklyTasks));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(weeklyTasks));
         renderPlanner();
 
         alert('Data imported successfully!');
@@ -146,7 +146,7 @@ function saveTasks(silent = false) {
     dayTasks[key] = ta.value.trim();
   });
   weeklyTasks[currentDay] = dayTasks;
-  localStorage.setItem('weeklyPlannerTasks', JSON.stringify(weeklyTasks));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(weeklyTasks));
 
   if (!silent) {
     saveAllBtn.textContent = 'All Saved ✓';
