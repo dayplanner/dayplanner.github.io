@@ -9,6 +9,9 @@ const slotMinutes = 30; // half-hour slots
 
 let currentDay = 'sunday';
 
+// const STORAGE_KEY = "DayPlanner";
+const STORAGE_KEY = "weeklyPlannerTasks";
+
 // Load all tasks (object with day keys)
 const weeklyTasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
@@ -105,7 +108,7 @@ exportBtn.addEventListener('click', () => {
   setTimeout(() => (exportBtn.textContent = 'Export'), 1500);
 });
 
-const STORAGE_KEY = "DayPlanner";
+
 // --- Import Tasks ---
 const importInput = document.getElementById('importInput');
 importInput.addEventListener('change', (e) => {
