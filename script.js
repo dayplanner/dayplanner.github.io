@@ -82,30 +82,41 @@ function renderPlanner() {
       input.value = taskText;
       input.dataset.key = key;
 
-      // --- Show/hide save button depending on content ---
-      input.addEventListener('input', () => {
-        const hasContent = input.value.trim().length > 0;
-        if (hasContent) {
-          saveBtn.classList.remove('hidden');
-        } else {
-          saveBtn.classList.add('hidden');
-        }
-      });
+// --- Show/hide Save button depending on content ---
+input.addEventListener('input', () => {
+  const hasContent = input.value.trim().length > 0;
+  if (hasContent) {
+    saveBtn.classList.remove('hidden');
+  } else {
+    saveBtn.classList.add('hidden');
+  }
+});
 
-      // --- Accessibility / Tab order improvement ---
-      input.tabIndex = 1; // default sequence
-      saveBtn.tabIndex = 0; // focus before textarea when visible
+// --- Auto-save if field is empty on blur ---
+input.addEventListener('blur', () => {
+  const isEmpty = input.value.trim().length === 0;
+  if (isEmpty) {
+    saveBtn.click(); // trigger save automatically
+  }
+});
 
-      // When user presses Tab, move focus to Save button first if content exists
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Tab' && !e.shiftKey) {
-          const hasContent = input.value.trim().length > 0;
-          if (hasContent) {
-            e.preventDefault();
-            saveBtn.focus();
-          }
-        }
-      });
+// --- Accessibility / Tab order improvement ---
+input.tabIndex = 1; // default sequence
+saveBtn.tabIndex = 0; // focus before textarea when visible
+
+// --- Tab key behavior ---
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Tab' && !e.shiftKey) {
+    const hasContent = input.value.trim().length > 0;
+    if (hasContent) {
+      e.preventDefault();
+      saveBtn.focus();
+    } else {
+      // Auto-save when user tabs out of empty input
+      saveBtn.click();
+    }
+  }
+});
 
 
 
